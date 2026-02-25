@@ -1,4 +1,15 @@
+import db from "../database/db.js";
+
 export class WalletService {
+  async createWallet(userId: number, trx?: any) {
+    const query = trx || db;
+    return await query('wallets').insert({
+      user_id: userId,
+      balance: 0,
+      is_disabled: false,
+    });
+  };
+
   async getBalance(userId: string) {
     return { userId, balance: 1000, currency: 'NGN' };
   }

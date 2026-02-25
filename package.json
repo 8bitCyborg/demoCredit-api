@@ -16,8 +16,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/knex": "^0.15.2",
     "@types/node": "^25.3.0",
+    "bcrypt": "^6.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },

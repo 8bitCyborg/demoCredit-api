@@ -15,7 +15,7 @@ export const routes: Route[] = [
   { path: '/api/auth/login', method: 'POST', handler: authController.login.bind(authController) },
 
   // User Routes
-  { path: '/api/user/profile', method: 'GET', handler: userController.getProfile.bind(userController) },
+  // { path: '/api/user/profile', method: 'GET', handler: userController.getProfile.bind(userController) },
 
   // Wallet Routes
   { path: '/api/wallet/balance', method: 'GET', handler: walletController.getBalance.bind(walletController) },

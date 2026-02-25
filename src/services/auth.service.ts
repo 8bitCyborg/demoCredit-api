@@ -1,5 +1,6 @@
-import { create } from "node:domain";
 import { userService } from "./user.service.js";
+import bcrypt from "bcrypt";
+
 export class AuthService {
   async signup(body: any) {
     try {
@@ -16,9 +17,9 @@ export class AuthService {
       //   };
       // };
 
-      const createUser = await userService.create(body);
+      const user = await userService.create(body);
       return {
-        createUser,
+        user,
         token: 'faux-jwt-token'
       };
     } catch (error) {
@@ -30,13 +31,26 @@ export class AuthService {
   };
 
   async login(body: any) {
-    return {
-      id: body.id,
-      name: 'Demo User',
-      email: 'user@example.com',
-      createdAt: new Date().toISOString()
+    try {
+      const { email, password } = body;
+      const user = await userService.getUserByEmail(email);
+      if (!user) throw new Error('User not found');
+
+      const isPasswordValid = await bcrypt.compare(password, user?.password);
+      if (!isPasswordValid) throw new Error('Invalid email/password');
+
+      return {
+        user,
+        token: 'faux-jwt-token',
+      };
+    } catch (error) {
+      return {
+        message: "Unable to complete login. Please try again later",
+        error,
+      };
     };
   };
+
 };
 
 export const authService = new AuthService();
