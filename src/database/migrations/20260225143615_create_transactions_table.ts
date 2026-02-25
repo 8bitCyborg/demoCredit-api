@@ -6,7 +6,7 @@ export async function up(knex: any): Promise<void> {
     table.increments("id").primary();
     table.integer("wallet_id").unsigned().notNullable()
       .references("id").inTable("wallets").onDelete("CASCADE");
-    table.decimal("amount", 15, 2).notNullable().defaultTo(0.00);
+    table.bigInteger("amount").notNullable().defaultTo(0);
     table.enum("type", ["credit", "debit"]).notNullable();
     // Purpose: 'funding', 'transfer', 'withdrawal'
     table.string("category").notNullable();

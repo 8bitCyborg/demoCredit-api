@@ -22,7 +22,7 @@ export async function up(knex: any): Promise<void> {
         .references("id")
         .inTable("users")
         .onDelete("CASCADE");
-      table.decimal("balance", 15, 4).notNullable().defaultTo(0.0000); // Money: 15 digits total, 4 after the decimal point
+      table.bigInteger("balance").notNullable().defaultTo(0); // Money: 15 digits total, 4 after the decimal point
       table.boolean("is_disabled").defaultTo(false);
       table.timestamps(true, true);
       table.timestamp('deleted_at').nullable();
