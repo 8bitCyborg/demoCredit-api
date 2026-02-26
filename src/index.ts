@@ -14,9 +14,10 @@ const server = http.createServer(async (req: http.IncomingMessage, res: http.Ser
       }
       const result = await route.handler(req, res);
       if (!res.writableEnded) { //incase the write stream is not ended.
-        return res.end(result ? JSON.stringify(result) : undefined);
-      };
-    };
+        res.end(result ? JSON.stringify(result) : undefined);
+      }
+      return;
+    }
 
     // Default /api route (health check) or root
     if ((url === '/api') && method === 'GET') {
@@ -34,8 +35,12 @@ const server = http.createServer(async (req: http.IncomingMessage, res: http.Ser
 
   } catch (error) {
     console.error('Request error:', error);
-    res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Internal Server Error' }));
+    if (!res.headersSent) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Internal Server Error' }));
+    } else if (!res.writableEnded) {
+      res.end();
+    }
   }
 });
 
