@@ -95,7 +95,7 @@ export class WalletService {
       await this._validateWallet(userWallet, body.amount);
       await this._credit(body, userWallet.id, trx);
 
-      return { message: "Wallet funded successfully" };
+      return { message: "Wallet funded successfully", status: 200 };
     });
   };
 
@@ -104,7 +104,7 @@ export class WalletService {
       const userWallet = await this.getWalletById(body.user_id, trx);
       await this._validateWallet(userWallet, body.amount);
       await this._debit(body, userWallet.id, trx);
-      return { message: "Wallet withdrawn successfully" };
+      return { message: "Wallet withdrawn successfully", status: 200 };
     });
   };
 
@@ -122,7 +122,7 @@ export class WalletService {
         reference: body.reference + "-CR",
       }, receiverWallet.id, trx);
 
-      return { message: "Funds transferred successfully" };
+      return { message: "Funds transferred successfully", status: 200 };
     });
   };
 
