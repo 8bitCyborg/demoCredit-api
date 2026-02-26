@@ -60,7 +60,7 @@ erDiagram
 - **Atomic Transactions**: All financial operations use database transactions to ensure data integrity and prevent race conditions.
 - **Audit Trail**: Comprehensive transaction logging for every credit and debit operation.
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Runtime**: [Node.js](https://nodejs.org/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)

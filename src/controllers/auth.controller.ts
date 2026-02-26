@@ -16,7 +16,11 @@ export class AuthController {
     }
 
     const response = await authService.signup(validation.data);
-    res.writeHead(201, { 'Content-Type': 'application/json' });
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader(
+      'Set-Cookie',
+      `token=${response.token}; HttpOnly; Path=/; Max-Age=86400; SameSite=Strict`,
+    );
     return { response };
   };
 
@@ -29,9 +33,13 @@ export class AuthController {
         message: 'Validation failed',
         errors: validation.error.format()
       };
-    }
-
+    };
     const response = await authService.login(validation.data);
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader(
+      'Set-Cookie',
+      `token=${response.token}; HttpOnly; Path=/; Max-Age=86400; SameSite=Strict`,
+    );
     return { response };
   };
 };

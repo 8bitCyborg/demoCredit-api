@@ -12,8 +12,11 @@ const server = http.createServer(async (req: http.IncomingMessage, res: http.Ser
       if (!route.isPublic) {
         await jwtGuard(req as any);
       }
-      return await route.handler(req, res);
-    }
+      const result = await route.handler(req, res);
+      if (!res.writableEnded) { //incase the write stream is not ended.
+        return res.end(result ? JSON.stringify(result) : undefined);
+      };
+    };
 
     // Default /api route (health check) or root
     if ((url === '/api') && method === 'GET') {
