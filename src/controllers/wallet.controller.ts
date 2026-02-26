@@ -5,6 +5,12 @@ import { getUserIdFromRequest } from '../jwt/jwtGuard.js';
 import { fundWalletSchema, withdrawSchema, transferSchema } from '../schemas/wallet.schema.js';
 
 export class WalletController {
+  getWallet = async (req: IncomingMessage, res: ServerResponse) => {
+    const user_id = getUserIdFromRequest(req);
+    const result = await walletService.getWallet(user_id);
+    return result;
+  };
+
   fundWallet = async (req: IncomingMessage, res: ServerResponse) => {
     const body = await getRequestBody(req);
     const validation = fundWalletSchema.safeParse(body);

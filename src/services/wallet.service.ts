@@ -1,6 +1,10 @@
 import db from "../database/db.js";
 
 export class WalletService {
+  async getWallet(user_id: number) {
+    return await db('wallets').where({ user_id }).first();
+  };
+
   private async _credit(body: any, wallet_id: number, trx?: any) {
     // here we credit the user's wallet and generate a credit ledger entry.
 
@@ -16,6 +20,8 @@ export class WalletService {
       status: 'success',
       reference: body.reference,
       description: body.description,
+      counterparty_name: body.counterparty_name,
+      counterparty_id: body.counterparty_id,
     });
   };
 
@@ -32,6 +38,8 @@ export class WalletService {
       status: 'success',
       reference: body.reference,
       description: body.description,
+      counterparty_name: body.counterparty_name,
+      counterparty_id: body.counterparty_id,
     });
   };
 
@@ -93,7 +101,11 @@ export class WalletService {
 
       const userWallet = await this._getWalletByEmail(body.email);
       await this._validateWallet(userWallet, body.amount);
-      await this._credit(body, userWallet.id, trx);
+      await this._credit({
+        ...body,
+        counterparty_name: 'Self',
+        counterparty_id: userWallet.id,
+      }, userWallet.id, trx);
 
       return { message: "Wallet funded successfully", status: 200 };
     });

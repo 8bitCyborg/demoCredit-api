@@ -13,6 +13,9 @@ export const withdrawSchema = z.object({
   reference: z.string().min(1, 'Reference is required'),
   category: z.string().default('withdrawal'),
   description: z.string().optional(),
+  counterparty_id: z.string().min(1, 'Destination account number is required'),
+  destination_bank_code: z.string().min(1, 'Destination bank code is required'),
+  counterparty_name: z.string().min(1, 'Destination account name is required'),
 });
 
 export const transferSchema = z.object({
