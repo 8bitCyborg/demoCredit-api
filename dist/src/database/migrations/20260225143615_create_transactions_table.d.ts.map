@@ -1,1 +1,0 @@
-{"version":3,"file":"20260225143615_create_transactions_table.d.ts","sourceRoot":"","sources":["../../../../src/database/migrations/20260225143615_create_transactions_table.ts"],"names":[],"mappings":"AAGA,wBAAsB,EAAE,CAAC,IAAI,EAAE,GAAG,GAAG,OAAO,CAAC,IAAI,CAAC,CAgBjD;AAGD,wBAAsB,IAAI,CAAC,IAAI,EAAE,GAAG,GAAG,OAAO,CAAC,IAAI,CAAC,CAEnD"}
