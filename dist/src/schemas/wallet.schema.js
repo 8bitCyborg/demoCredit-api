@@ -1,0 +1,22 @@
+import { z } from 'zod';
+export const fundWalletSchema = z.object({
+    amount: z.number().positive('Amount must be positive'),
+    email: z.string().email('Invalid email address'),
+    reference: z.string().min(1, 'Reference is required'),
+    category: z.string().default('funding'),
+    description: z.string().optional(),
+});
+export const withdrawSchema = z.object({
+    amount: z.number().positive('Amount must be positive').max(10000000, 'Single withdraw limit is 100,000'),
+    reference: z.string().min(1, 'Reference is required'),
+    category: z.string().default('withdrawal'),
+    description: z.string().optional(),
+});
+export const transferSchema = z.object({
+    receiver_user_id: z.number().int().positive('Invalid receiver user ID'),
+    amount: z.number().positive('Amount must be positive').max(10000000, 'Single transfer limit is 100,000'),
+    reference: z.string().min(1, 'Reference is required'),
+    category: z.string(),
+    description: z.string().optional(),
+});
+//# sourceMappingURL=wallet.schema.js.map

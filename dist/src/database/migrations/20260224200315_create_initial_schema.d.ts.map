@@ -1,0 +1,1 @@
+{"version":3,"file":"20260224200315_create_initial_schema.d.ts","sourceRoot":"","sources":["../../../../src/database/migrations/20260224200315_create_initial_schema.ts"],"names":[],"mappings":"AAGA,wBAAsB,EAAE,CAAC,IAAI,EAAE,GAAG,GAAG,OAAO,CAAC,IAAI,CAAC,CA2BjD;AAED,wBAAsB,IAAI,CAAC,IAAI,EAAE,GAAG,GAAG,OAAO,CAAC,IAAI,CAAC,CAEnD"}
