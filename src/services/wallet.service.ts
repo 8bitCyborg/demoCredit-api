@@ -127,10 +127,14 @@ export class WalletService {
       await this._validateWallet(senderWallet, body.amount); // verify the sender can actually send the money.
       await this._debit({
         ...body,
+        counterparty_id: body.receiver_user_id,
+        counterparty_name: body.receiver_name,
         reference: body.reference + "-DR",
       }, senderWallet.id, trx);
       await this._credit({
         ...body,
+        counterparty_id: body.sender_user_id,
+        counterparty_name: body.sender_name,
         reference: body.reference + "-CR",
       }, receiverWallet.id, trx);
 

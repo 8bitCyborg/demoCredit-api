@@ -18,4 +18,10 @@ export const loginSchema = z.object({
 
 export type LoginInput = z.infer<typeof loginSchema>;
 
+export const validateReceiverSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
+export type ValidateReceiverInput = z.infer<typeof validateReceiverSchema>;
+
 

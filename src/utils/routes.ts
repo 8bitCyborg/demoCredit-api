@@ -17,7 +17,7 @@ export const routes: Route[] = [
   { path: '/api/auth/login', method: 'POST', handler: authController.login, isPublic: true },
 
   // User Routes
-  { path: '/api/user/profile', method: 'GET', handler: userController.getProfile },
+  { path: '/api/user/validate-receiver', method: 'POST', handler: userController.validateReceiver },
 
   // Wallet Routes
   { path: '/api/wallet', method: 'GET', handler: walletController.getWallet },

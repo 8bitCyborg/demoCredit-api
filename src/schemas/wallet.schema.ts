@@ -20,6 +20,8 @@ export const withdrawSchema = z.object({
 
 export const transferSchema = z.object({
   receiver_user_id: z.number().int().positive('Invalid receiver user ID'),
+  receiver_name: z.string().min(1, 'Receiver name is required'),
+  sender_name: z.string().min(1, 'Sender name is required'),
   amount: z.number().positive('Amount must be positive').max(10000000, 'Single transfer limit is 100,000'),
   reference: z.string().min(1, 'Reference is required'),
   category: z.string(),
