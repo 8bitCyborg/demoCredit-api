@@ -1,11 +1,25 @@
 import * as http from 'http';
 import { routeMap } from './utils/routes.js';
 import { jwtGuard } from './jwt/jwtGuard.js';
+import { limiter } from './utils/rate-limiter.js';
 
 const PORT = process.env.PORT || 3000;
 
 const server = http.createServer(async (req: http.IncomingMessage, res: http.ServerResponse) => {
   const { url, method } = req;
+
+  const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || 'global';
+  try {
+    await limiter.consume(ip);
+  } catch (rejRes) {
+    res.writeHead(429, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      error: 'Too Many Requests',
+      message: 'Too many requests'
+    }));
+    return;
+  };
+
   const allowedOrigins = ['http://localhost:5173', 'https://democredit.netlify.app'];
   const origin: any = req.headers.origin;
 
