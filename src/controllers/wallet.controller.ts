@@ -7,7 +7,7 @@ import { fundWalletSchema, withdrawSchema, transferSchema } from '../schemas/wal
 export class WalletController {
   getWallet = async (req: IncomingMessage, res: ServerResponse) => {
     const user_id = getUserIdFromRequest(req);
-    const result = await walletService.getWallet(user_id);
+    const result = await walletService.getWalletById(user_id);
     return result;
   };
 

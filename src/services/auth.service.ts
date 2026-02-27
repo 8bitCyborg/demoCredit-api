@@ -21,6 +21,8 @@ export class AuthService {
 
     const user = await userService.create(body);
     const token = generateToken({ userId: user.id, email: user.email });
+
+    // pass off welcome email to queue here.
     return {
       user,
       token,
