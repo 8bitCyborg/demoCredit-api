@@ -19,7 +19,7 @@ export class AuthController {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader(
       'Set-Cookie',
-      `token=${response.token}; HttpOnly; Path=/; Max-Age=86400; SameSite=Strict`,
+      `token=${response.token}; HttpOnly; Path=/; Max-Age=86400; SameSite=None; Secure`,
     );
     return { response };
   };
@@ -38,7 +38,7 @@ export class AuthController {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader(
       'Set-Cookie',
-      `token=${response.token}; HttpOnly; Path=/; Max-Age=86400; SameSite=Strict`,
+      `token=${response.token}; HttpOnly; Path=/; Max-Age=86400; SameSite=None; Secure`,
     );
     return { response };
   };
