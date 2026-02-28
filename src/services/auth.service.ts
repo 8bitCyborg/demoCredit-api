@@ -1,9 +1,10 @@
 import { userService } from "./user.service.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../jwt/jwt.util.js";
+import type { SignupInput, LoginInput } from "../schemas/auth.schema.js";
 
 export class AuthService {
-  async signup(body: any) {
+  async signup(body: SignupInput) {
     // first check if user is blacklisted on lendsqr karma. Do not complete signup if they are.
     if (body.bvn === '22222222222') { //this is hardcoded here because in test mode, the karma api seems to always return the same response.
       const karma_response = await fetch(`https://adjutor.lendsqr.com/v2/verification/karma/${body.bvn}`, {
@@ -14,7 +15,10 @@ export class AuthService {
       if (karma_response.ok) {
         const data = await karma_response.json();
         if (data?.data?.karma_identity) {
-          throw new Error('Unable to complete signup. Please try again later.');
+          throw {
+            status: 403,
+            message: 'Unable to complete signup. You are blacklisted on Lendsqr Karma.'
+          };
         };
       };
     };
@@ -30,7 +34,7 @@ export class AuthService {
     };
   };
 
-  async login(body: any) {
+  async login(body: LoginInput) {
     const user = await userService.getUserByEmail(body.email, true);
     if (!user) throw new Error('User not found');
 

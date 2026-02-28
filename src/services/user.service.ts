@@ -1,10 +1,10 @@
 import db from "../database/db.js";
 import { walletService } from "./wallet.service.js";
 import bcrypt from 'bcrypt';
+import type { SignupInput } from "../schemas/auth.schema.js";
 
 export class UserService {
-
-  async create(body: any) {
+  async create(body: SignupInput) {
     const saltRounds = Number(process.env.SALT_ROUNDS);
     if (!saltRounds) throw new Error("Unable to create user");
     const hashedPassword = await bcrypt.hash(body.password, saltRounds);

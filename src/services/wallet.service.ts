@@ -1,9 +1,19 @@
+import type { Knex } from "knex";
 import db from "../database/db.js";
 import { walletHelperService as whs } from "./wallet.helper.service.js";
+import type {
+  FundWalletInput,
+  WithdrawInput,
+  TransferInput,
+  CreditDebitInput,
+  Wallet,
+  WithdrawActionInput,
+  TransferActionInput
+} from "../schemas/wallet.schema.js";
 
 export class WalletService {
 
-  async getWalletById(user_id: number, trx?: any) {
+  async getWalletById(user_id: number, trx?: Knex.Transaction): Promise<Wallet> {
     const query = trx ?? db;
     const wallet = await query('wallets')
       .where({ user_id })
@@ -15,7 +25,7 @@ export class WalletService {
     return wallet;
   };
 
-  private async _credit(body: any, wallet_id: number, trx?: any) {
+  private async _credit(body: CreditDebitInput, wallet_id: number, trx: Knex.Transaction) {
     // here we credit the user's wallet and generate a credit ledger entry.
 
     await trx('wallets')
@@ -35,7 +45,7 @@ export class WalletService {
     });
   };
 
-  private async _debit(body: any, wallet_id: number, trx?: any) {
+  private async _debit(body: CreditDebitInput, wallet_id: number, trx: Knex.Transaction) {
     await trx('wallets')
       .where({ id: wallet_id })
       .decrement('balance', body.amount); //amount should be in the smallest denom.
@@ -55,7 +65,7 @@ export class WalletService {
 
 
   // trx here just on the offchance that this is called from a transaction
-  async createWallet(userId: number, trx?: any) {
+  async createWallet(userId: number, trx?: Knex.Transaction) {
     const query = trx || db;
     return await query('wallets').insert({
       user_id: userId,
@@ -64,10 +74,10 @@ export class WalletService {
     });
   };
 
-  async fundWallet(body: any) {
+  async fundWallet(body: FundWalletInput) {
     await whs.idempotency(body);
 
-    return await db.transaction(async (trx: any) => {
+    return await db.transaction(async (trx: Knex.Transaction) => {
       const validateTransaction = await whs.validateTransaction(body.reference);
       if (!validateTransaction) throw new Error("Transaction validation failed");
 
@@ -84,27 +94,31 @@ export class WalletService {
     });
   };
 
-  async withdrawFromWallet(body: any) {
+  async withdrawFromWallet(body: WithdrawActionInput) {
     await whs.idempotency(body);
 
     // before getting here, the bank being withdrawn to would have first been verified.
     // the user will also be ideally required to set up a withdrawal pin that will be verified first before getting here as well.
 
-    return await db.transaction(async (trx: any) => {
+    return await db.transaction(async (trx: Knex.Transaction) => {
       const userWallet = await this.getWalletById(body.user_id, trx);
       await whs.validateWallet(userWallet, body.amount);
-      await this._debit(body, userWallet.id, trx);
+      await this._debit({
+        ...body,
+        counterparty_id: body.counterparty_id,
+        counterparty_name: body.counterparty_name,
+      }, userWallet.id, trx);
 
       // pass an email/notification off to the queue here to notify the user of the withdrawal.
       return { message: "Wallet withdrawn successfully", status: 200 };
     });
   };
 
-  async transferFunds(body: any) {
+  async transferFunds(body: TransferActionInput) {
     await whs.idempotency(body);
     // the user will also be ideally required to set up a withdrawal pin that will be verified first before getting here.
 
-    return await db.transaction(async (trx) => {
+    return await db.transaction(async (trx: Knex.Transaction) => {
       const senderWallet = await this.getWalletById(body.sender_user_id, trx);
       const receiverWallet = await this.getWalletById(body.receiver_user_id, trx);
       await whs.validateWallet(senderWallet, body.amount); // verify the sender can actually send the money.

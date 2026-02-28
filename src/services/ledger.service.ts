@@ -1,8 +1,10 @@
 import db from "../database/db.js";
+import type { LedgerEntryInput } from "../schemas/wallet.schema.js";
+import type { Knex } from "knex";
 
 export class LedgerService {
 
-  async createLedgerEntry(body: any, trx?: any) {
+  async createLedgerEntry(body: LedgerEntryInput, trx: Knex.Transaction) {
     return await trx('transactions').insert({
       wallet_id: body.wallet_id,
       amount: body.amount,

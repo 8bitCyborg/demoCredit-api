@@ -31,3 +31,35 @@ export const transferSchema = z.object({
 export type FundWalletInput = z.infer<typeof fundWalletSchema>;
 export type WithdrawInput = z.infer<typeof withdrawSchema>;
 export type TransferInput = z.infer<typeof transferSchema>;
+
+export interface LedgerEntryInput {
+  wallet_id: number;
+  amount: number;
+  type: 'credit' | 'debit';
+  category: string;
+  status: 'pending' | 'success' | 'failed';
+  reference: string;
+  description?: string | undefined;
+}
+
+export interface CreditDebitInput {
+  amount: number;
+  category: string;
+  reference: string;
+  description?: string | undefined;
+  counterparty_name: string;
+  counterparty_id: number | string;
+}
+
+export interface Wallet {
+  id: number;
+  user_id: number;
+  balance: number;
+  is_disabled: boolean;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+
+export type WithdrawActionInput = WithdrawInput & { user_id: number };
+export type TransferActionInput = TransferInput & { sender_user_id: number };
