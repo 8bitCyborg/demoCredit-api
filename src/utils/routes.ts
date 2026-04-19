@@ -30,7 +30,8 @@ export const routes: Route[] = [
   { path: '/api/wallet/transfer', method: 'POST', handler: walletController.transfer },
 
   // Loan Routes
-  { path: '/api/loans/apply', method: 'POST', handler: loanController.applyForLoan }
+  { path: '/api/loans/apply', method: 'POST', handler: loanController.applyForLoan },
+  { path: '/api/loans', method: 'GET', handler: loanController.getLoanApplications }
 ];
 
 export const routeMap = new Map<string, Route>(

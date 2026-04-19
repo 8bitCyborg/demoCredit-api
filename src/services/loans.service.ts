@@ -5,7 +5,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export class LoanService {
   async uploadLoanDocument(body: any, userId: number) {
     const analysis = await this.analyzeLoanApplication(body.amount, body.installments, body.fileMetadata);
-    console.log('analysy', analysis);
 
     return await db('loan_documents').insert({
       user_id: userId,
@@ -18,7 +17,7 @@ export class LoanService {
   };
 
   async analyzeLoanApplication(loanAmount: string, installments: number, file: any) {
-    const genAI = new GoogleGenerativeAI("AIzaSyDk8ssXkyGNtEEGy-LZZtCmNQioL075Kh4");
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       generationConfig: { responseMimeType: "application/json" },
@@ -41,13 +40,13 @@ export class LoanService {
     3. Suggest a clear action: "APPROVE" or "REJECT".
     4. Provide a detailed justification ("reasoning") for the decision.
     5. Ensure all currency references in your reasoning are in Naira (₦).
+    6. Do not mention the names on the document in your reasoning. Also do not mention the bank names or state the amounts. 
+      Explain your reasoning as clearly as possible without those.
 
     **Output Format:**
     Return ONLY a JSON object with the following structure:
     {
       "suggestion": "APPROVED" | "REJECTED",
-      "amountEvaluated": ${loanAmount},
-      "monthlyObligation": ${monthlyRepayment.toFixed(2)},
       "reasoning": "A concise explanation of the credit decision.",
       "riskScore": "A number from 1 to 100. should never be a decimal"
     }
@@ -66,6 +65,23 @@ export class LoanService {
     return JSON.parse(result.response.text());
   };
 
+  async getLoanApplications(userId: number) {
+    return await db('loan_documents')
+      .select(
+        'id',
+        'amount',
+        'installments',
+        'amountPerInstallment',
+        'interest_rate',
+        'status',
+        'review_suggestion',
+        'risk_score',
+        'reason',
+        'created_at'
+      )
+      .where('user_id', userId)
+      .orderBy('created_at', 'desc');
+  };
 };
 
 export const loanService = new LoanService();

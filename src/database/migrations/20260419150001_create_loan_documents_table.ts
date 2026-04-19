@@ -4,11 +4,11 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("loan_documents", (table) => {
     table.increments("id").primary();
     table.integer("user_id").unsigned().notNullable()
-      .references("id").inTable("users").onDelete("CASCADE");
-    table.bigInteger("amount").notNullable();
+      .references("id").inTable("3husers").onDelete("CASCADE");
+    table.decimal("amount", 15, 2).notNullable();
 
     table.integer("installments").nullable().defaultTo(1);
-    table.decimal("amountPerInstallment").nullable();
+    table.decimal("amountPerInstallment", 15, 2).nullable();
     table.decimal("interest_rate", 5, 2).nullable().defaultTo(5.00);
     table.json("fileMetadata").nullable();
     table.enum("status", ["approved", "pending", "rejected"]).defaultTo("pending");

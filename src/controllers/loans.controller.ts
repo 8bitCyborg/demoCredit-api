@@ -27,10 +27,11 @@ export class LoanController {
       // Verification logging as requested
       console.log('--- Loan Application Received ---');
 
-      // Call service to record the application (optional context)
+      // Call service to record the application
       await loanService.uploadLoanDocument({
         amount: validation.data.amount,
         installments: validation.data.installments,
+        amountPerInstallment: validation.data.amountPerInstallment,
         interest_rate: 5, // 5% amortized interest
         fileMetadata: {
           name: file.originalname,
@@ -41,7 +42,7 @@ export class LoanController {
       }, userId);
 
       return res.status(200).json({
-        message: 'Loan application submitted successfully in memory',
+        message: 'Loan application submitted successfully',
         file: {
           name: file.originalname,
           size: file.size
@@ -49,6 +50,17 @@ export class LoanController {
       });
     } catch (error: any) {
       console.error('Loan application error:', error);
+      return res.status(error.status || 500).json({ error: error.message || 'Internal Server Error' });
+    }
+  };
+
+  async getLoanApplications(req: any, res: any) {
+    try {
+      const userId = getUserIdFromRequest(req);
+      const applications = await loanService.getLoanApplications(userId);
+      return res.status(200).json(applications);
+    } catch (error: any) {
+      console.error('Fetch loans error:', error);
       return res.status(error.status || 500).json({ error: error.message || 'Internal Server Error' });
     }
   };
