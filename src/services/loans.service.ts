@@ -61,6 +61,7 @@ export class LoanService {
         },
       },
     ]);
+    console.log('result', result);
 
     return JSON.parse(result.response.text());
   };
