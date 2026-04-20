@@ -44,8 +44,9 @@ export class LoanService {
     3. Suggest a clear action: "APPROVE" or "REJECT".
     4. Provide a detailed justification ("reasoning") for the decision.
     5. Ensure all currency references in your reasoning are in Naira (₦).
-    6. Do not mention the names on the document in your reasoning. Also do not mention the bank names or state the amounts. 
-      Explain your reasoning as clearly as possible without those.
+    6. Do not mention the names on the document in your reasoning. Also do not mention bank names, payment platform names or state amounts from the document.
+    Explain your reasoning as clearly as possible without those.
+    The only amounts you are allowed to mention are the monthly repayment amount, the total amount requested for in the loan and the total of the principal plus interest.
 
     **Output Format:**
     Return ONLY a JSON object with the following structure:
